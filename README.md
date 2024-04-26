@@ -7,7 +7,7 @@ We will create in this project:
 - 2 Deployments/Pods
 - 2 Services
 - 1 ConfigMap
-- 1 Secret
+- 1 Secret <p>
 First, we will create a **MongoDB** Pod. We will need a service to communicate with the pod. This service will be **internal**, which meansno external requests are allowed to the pod. However, only components within or inside the **cluster** can communicate to it. <p>
 Next, we will create a **Mongo-Express** pod. Here, we will require **a database URL** of **mongoDB** that the **mongo-express** can connect to it. Alos, we will need the credentials (username and password) of the database (mongoDB) for authentication. We will utilise **deployment configuration file** through **environmental viariables** to pass this **information (credentials)** to the **MongoExpress**. For this to be achieved, we will create a **config map** that contains the **database URL**and a secret that contains the credentials. Then both will be referenced in the **deployment configuration file**. Finally, an **external service (ingress)** will be created to be enable the **MongoExpress** to be externally accessible and external requests to reach and communicate with the pod.
 ## Create MongoDB Deployment Configuration File
@@ -87,6 +87,19 @@ data:
   mongo-root-username: am9uZXNvc2Vpa3dhbWU=
   mongo-root-password: MTRBcG9zdGxlc0A=
 ```
+### Create the Secret 
+To create the **Secret** credentials, run:
+```
+kubectl apply -f mongoDB-secret.yaml
+```
+If the output after running the above is **"secret/mongodb-secret created"**, then the **Secret** has been successfully created. 
+We can further confirm this by running:
+```
+kubectl get secret
+```
+The resulted output will comfirming the creation of the secret is below:<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/f588a200-1eb9-408a-8e96-eeea042f8d72)
+
 ### Referencing the Secret Values in the Deployment Configuration files
 Now we will set the environmental values for the deployment configuration file by referncing the values of the **username** and **password** in **Secret** config files. The file should look like his after referencing:
 ```
