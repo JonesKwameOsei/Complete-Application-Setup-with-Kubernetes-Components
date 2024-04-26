@@ -45,7 +45,7 @@ spec:
         -  name: MONGO_INITDB_ROOT_PASSWORD
           value:
 ```
-## Create the Secrete Files
+## Create the Secrete Configuration Files
 To **secure** the credentials, It is advisable to reference the credentials of the MongoDB database in a **secret file** for the following reasons:
 1. **Security**: Storing **sensitive** information, such as database credentials, directly in the **Kubernetes manifests** or **application code** can be a security risk. If the Kubernetes manifests or application code is accidentally leaked or accessed by unauthorized parties, it could expose the database credentials, leading to potential data breaches or unauthorized access to the database.
 
@@ -149,6 +149,77 @@ kubectl get all
 ```
 This command lists all components including the **Cluster-IP**, **Service**, **Pod** and the **replica**. <p>
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/5b38c2cb-ca7c-4905-923a-c5d360153e90)
+
+##  Create the Service Configuration Files
+The following configuration creates the service custom service for the pod. Since the pod and service goes together, we will add the configuration in the same files as the deployment file. 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-deployment
+  labels:
+    app: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+---
+# Service Configuration File
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-service
+spec:
+  selector:
+    app: mongodb
+  ports:
+  # the port that this service should serve on
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017
+```
+### Create the Service
+We will re-run the command below to create the service:
+```
+kubectl apply -f mongoDB-deployment.yaml
+```
+By re-running the command, Kubernetes creates only the service and leaves the mongoDB pod unchanged as shown below.<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/1c3a88b7-b2ae-4aaa-8c92-aca99fae5332)<p>
+
+To confirm the **custom** service creation, we will run:
+```
+kubectl get service
+```
+We can observe that the service was created with the following details:
+- **Name**: mongodb-service
+- **Type**: ClusterIP
+- **Cluster-IP**: 10.105.197.33
+- **External-IP**: None
+- Port(s): 27017/TCP <p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/08b45afe-0ccc-4705-b0c4-0afd6c33361c)<p>
+
 
 
 
