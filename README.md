@@ -136,6 +136,22 @@ spec:
               name: mongodb-secret
               key: mongo-root-password
 ```
+### Create MongoDB Pod 
+To create the **MongoDB Pod**, run:
+```
+kubectl apply -f mongoDB-deployment.yaml
+```
+The ouput, **"deployment.apps/mongodb-deployment created"** confirms the creation of the pod. 
+
+To view all components, let us run:
+```
+kubectl get all
+```
+This command lists all components including the **Cluster-IP**, **Service**, **Pod** and the **replica**. <p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/5b38c2cb-ca7c-4905-923a-c5d360153e90)
+
+
+
 
 
 
