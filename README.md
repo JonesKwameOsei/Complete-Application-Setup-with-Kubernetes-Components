@@ -256,6 +256,142 @@ From the output, we can observe that the **Pod**, **service** and **replicaset**
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/33a5a0fb-caf5-4662-bcf0-a0639768fc88)<p>
 
 ## Create Mongo-Express and ConfigMap
+Next, we will create the **Pod** for **Mongo-Express** and its service as well as the External ConfigMap file. The external config files stores the database URL for the MongoDB. <p>
+
+### Create Mongo-Express Configuration Files
+The default port for mongo-express is 8081. Mongo-Express will also require a databse to connect to. It is also needs the MongoDB address, Internal Service as well as the credentials for the MongoDB to authenticate. We can set the following **environmental variables** to authnticate the credentials:
+- ME_CONFIG_MONGODB_ADMINUSERNAME 
+- ME_CONFIG_MONGODB_ADMINPASSWORD          
+- ME_CONFIG_MONGODB_SERVER <p>
+
+To set up the configuration file, create a new file and name it **mongoexpress.yaml**. Add the following configuration:
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb-express
+  labels:
+    app: mongodb-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb-express
+  template:
+    metadata:
+      labels:
+        app: mongodb-express
+    spec:
+      containers:
+        - name: mongodb-express
+          image: mongo-express
+          ports:
+            - containerPort: 8081
+          env:
+            - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-username
+            - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-secret
+                  key: mongo-root-password
+            - name: ME_CONFIG_MONGODB_SERVER
+              value: 
+```
+
+### Create External ConfigMap Files
+Next, we will create the configuration map file to store the **MongoDB** database URL. The credentials will be referenced in the **MongoExpress** configuration file. In a new file, **mongo.configmap.yaml, add:
+```
+# Defining the configmap file
+apiVersion: v1
+kind: ConfigMap
+metadata: 
+  name: mongodb-configmap
+data: 
+  # Referencing the MongoDB service namespace 
+  database_url: mongodb-service
+```
+
+### Referencing Credentials in ConfigMap to MongoExpress 
+```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express
+  labels:
+    app: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+      - name: mongo-express
+        image: mongo-express
+        ports:
+        - containerPort: 8081
+        env:
+        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-username
+        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+          valueFrom: 
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongo-root-password
+        - name: ME_CONFIG_MONGODB_SERVER
+          valueFrom: 
+            configMapKeyRef: # referenced the configmap 
+              name: mongodb-configmap
+              key: database_url
+```
+### Create MongoExpress Pod and ConfigMap
+We will create the **configmap** before the **mongoexpress** pod. Run:
+```
+kubectl apply -f mongo-configmap.yaml
+kubectl apply -f mongoExpress.yaml
+```
+The image below indicates that our ConfigMap and MongoExpress were created successfully.<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/653e4394-03d2-4b4e-b40e-7238cea1b2a1)<p>
+ We will run: 
+ ```
+kubectl gtt pod
+```
+This command enbles us to see the MongoExpress created and running.<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/fc4de626-3146-479a-82dc-91b1d50820f4)<p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
