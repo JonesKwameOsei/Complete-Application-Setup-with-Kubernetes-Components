@@ -220,6 +220,29 @@ We can observe that the service was created with the following details:
 - Port(s): 27017/TCP <p>
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/08b45afe-0ccc-4705-b0c4-0afd6c33361c)<p>
 
+Next, we will investigate if the **service** is attached the **MongoDB Pod**. To do this, we will run:
+```
+kubectl describe service mongodb-service
+```
+Name:              mongodb-service
+Namespace:         default
+Labels:            <none>
+Annotations:       <none>
+Selector:          app=mongodb
+Type:              ClusterIP
+IP Family Policy:  SingleStack
+IP Families:       IPv4
+IP:                10.105.197.33
+IPs:               10.105.197.33
+Port:              <unset>  27017/TCP
+TargetPort:        27017/TCP
+Endpoints:         10.244.0.12:27017
+Session Affinity:  None
+Events:            none <p>
+
+The results above indicates that the service, **mongodb-service**, is attached to the pod since the **TargetPort** for the service is **27017/TCP** with the **EndPoints** **10.244.0.12:27017**. The endpoint is the **IPAddress** of the pod, 10.244.0.12 and the **port**, 27017, that the application inside the pod is listening to. We can further confirm the IP address of the pod by running:
+``` 
+
 
 
 
