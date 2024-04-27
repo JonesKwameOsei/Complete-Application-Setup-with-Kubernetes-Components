@@ -384,12 +384,49 @@ kubectl logs mongo-express-859f75dd4f-pjw77
 It can be observed that **Mongo-Express** is running on version **1.0.2** and the **Mongo Express server** is listening at **port 8081**. <p>
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/c1bedcc5-8754-4bd2-878b-b1ce2c278456)<p>
 
+### Create Mongo Express External Service
+Mongo Express is a **web-based MongoDB admin interface**, which allows users to manage **MongoDB databases** and collections through a graphical user interface (GUI) accessible through a web browser.<p>
 
+By running **Mongo Express** as an external service, it becomes accessible from any device that has a web browser, making it easier to manage the **MongoDB databases** from multiple locations.<p>
 
+We will create the **Mongo-express** service configuration in the same file as the pod (Mongo-Express):
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-express-service 
+spec:
+  selector:
+    app: mongo-express
+  type: LoadBalancer
+  ports: 
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+      nodePort: 32000
+```
+The **type: LoadBalancer** directs external traffic to the pod. To create the service, we will run:
+```
+kubectl apply -f mongoExpress.yaml
+```
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/ed894668-b216-41cc-9b01-671d4619ba25)<p>
 
+Let's compare of **TYPE** of the **mongodb-service** to that of the **mongo-express-service** by running:
+```
+kubectl get service | grep mongo
+```
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/c009efe8-39b4-47e8-ba88-845018ecc9b2)<p>
+From the above image, whereas **mongodb-service** has **ClusterIP** as its **TYPE**, **mongo-express-service** has its **TYPE** as a **LoadBalancer**. The main differences between clusterIP and loadbalancer service types is that **clusterIP** services are only accessible within the **Kubernetes cluster**, while **loadbalancer** services are accessible from the public internet. <p>
 
+**N/B**: ClusterIP (Internal Service) is **Default** and we do not need to declare it in the configuration. 
 
-
+From the image above, we can also observe that the external-ip address for the **mongo-express-service is <pending>. To get the External-IP address, we have to run:
+```
+minikube service mongo-express-service
+```
+The browser opens to 
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/6a9788f4-1afc-4394-a991-645a3de6657e)<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/af725941-ac17-4673-88ad-451aa2a3aa44)<p>
 
 
 
