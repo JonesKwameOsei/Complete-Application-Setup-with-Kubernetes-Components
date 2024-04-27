@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    deployment.kubernetes.io/revision: "3"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"name":"nginx-deployment","namespace":"default"},"spec":{"replicas":2,"selector":{"matchLabels":{"app":"nginx"}},"template":{"metadata":{"labels":{"app":"nginx"}},"spec":{"containers":[{"image":"1.25.5","name":"nginx","ports":[{"containerPort":8080}]}]}}}}
+  creationTimestamp: "2024-04-26T05:23:33Z"
+  generation: 3
+  name: nginx-deployment
+  namespace: default
+  resourceVersion: "6520"
+  uid: 81bd2ad4-16b9-45f4-a0e1-59c5401672be
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+      app: nginx
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: 1.25.5
+        imagePullPolicy: IfNotPresent
+        name: nginx
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status:
+  availableReplicas: 2
+  conditions:
+  - lastTransitionTime: "2024-04-26T05:24:33Z"
+    lastUpdateTime: "2024-04-26T05:24:33Z"
+    message: Deployment has minimum availability.
+    reason: MinimumReplicasAvailable
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2024-04-26T05:23:33Z"
+    lastUpdateTime: "2024-04-26T06:14:58Z"
+    message: ReplicaSet "nginx-deployment-58dfc5df9c" is progressing.
+    reason: ReplicaSetUpdated
+    status: "True"
+    type: Progressing
+  observedGeneration: 3
+  readyReplicas: 2
+  replicas: 3
+  unavailableReplicas: 1
+  updatedReplicas: 1
