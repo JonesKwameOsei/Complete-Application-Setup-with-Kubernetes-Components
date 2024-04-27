@@ -365,10 +365,27 @@ The image below indicates that our ConfigMap and MongoExpress were created succe
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/653e4394-03d2-4b4e-b40e-7238cea1b2a1)<p>
  We will run: 
  ```
-kubectl gtt pod
+kubectl get pods
 ```
 This command enbles us to see the MongoExpress created and running.<p>
-![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/fc4de626-3146-479a-82dc-91b1d50820f4)<p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/d02a4c58-7763-457f-b2b1-a6ed829ad224)<p>
+
+We have **Mongo-Express** running, let us check its components by running:
+```
+kubectl get all | grep mongo-express
+```
+The outcome indicates that the **pod**, **deployment** and the **replicaset** have been created. <p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/6c09dbd0-0754-4b10-bfe1-36d4aa600fe6)<p>
+
+Now that we have checked the components of **Mongo-Express**, we will further investigate if it is connected to the **MongoDB** database and service. We can achieve this by running: 
+```
+kubectl logs mongo-express-859f75dd4f-pjw77
+```
+It can be observed that **Mongo-Express** is running on version **1.0.2** and the **Mongo Express server** is listening at **port 8081**. <p>
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/c1bedcc5-8754-4bd2-878b-b1ce2c278456)<p>
+
+
+
 
 
 
