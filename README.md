@@ -415,6 +415,8 @@ Let's compare of **TYPE** of the **mongodb-service** to that of the **mongo-expr
 ```
 kubectl get service | grep mongo
 ```
+![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/c48d2a3a-240b-473e-bc1e-eeb1d9fe1308)
+
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/c009efe8-39b4-47e8-ba88-845018ecc9b2)<p>
 From the above image, whereas **mongodb-service** has **ClusterIP** as its **TYPE**, **mongo-express-service** has its **TYPE** as a **LoadBalancer**. The main differences between clusterIP and loadbalancer service types is that **clusterIP** services are only accessible within the **Kubernetes cluster**, while **loadbalancer** services are accessible from the public internet. <p>
 
@@ -424,8 +426,9 @@ From the image above, we can also observe that the external-ip address for the *
 ```
 minikube service mongo-express-service
 ```
-The browser opens to 
+The browser opens requesting the MongoDB credentials. 
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/6a9788f4-1afc-4394-a991-645a3de6657e)<p>
+MongoExpress is now accessible on the web.<p>
 ![image](https://github.com/JonesKwameOsei/Complete-Application-Setup-with-Kubernetes-Components/assets/81886509/af725941-ac17-4673-88ad-451aa2a3aa44)<p>
 
 
