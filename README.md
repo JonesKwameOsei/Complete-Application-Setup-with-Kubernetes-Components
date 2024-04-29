@@ -25,7 +25,7 @@ metadata:
   labels:
     app: mongodb
 spec:
-  replicas: 1
+  replicas: 1 
   selector:
     matchLabels:
       app: mongodb
